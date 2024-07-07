@@ -1,0 +1,73 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Recipe {
+  id              String                @id @default(cuid())
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  name            String?
+  description     String?
+  cuisine         String?
+  calories        Int?
+  complexity      EnumRecipeComplexity?
+  videoUrl        Json?
+  preparationTime Int?
+  photoUrl        Json?
+  instructions    Json?
+}
+
+model Menu {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  name      String?
+  startDate DateTime?
+  endDate   DateTime?
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model Ingredient {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  unit      String?
+  name      String?
+  quantity  Float?
+}
+
+model Store {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String?
+  website   String?
+  inventory String?
+}
+
+model User {
+  id               String   @id @default(cuid())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  firstName        String?
+  lastName         String?
+  username         String   @unique
+  email            String?  @unique
+  password         String
+  roles            Json
+  familySize       Int?
+  caloriesPerDay   Int?
+  preferredCuisine String?
+  shoppingCart     Json?
+  menus            Menu[]
+}
+
+enum EnumRecipeComplexity {
+  Option1
+}
